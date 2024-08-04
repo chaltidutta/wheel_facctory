@@ -169,6 +169,20 @@ const Tasks = () => {
     }
   };
 
+  const handleTaskClick = async (orderId) => {
+    const token = localStorage.getItem('token');
+    try {
+      const response = await axios.get(`http://localhost:5203/api/Orders/${orderId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setTaskData(response.data);
+      setTaskType('OrderDetails');
+      setModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching order details:', error);
+    }
+  };
+
   return (
     <Container component="main" maxWidth="md">
       <CustomTypography variant="h4" component="h1" gutterBottom>
@@ -206,7 +220,9 @@ const Tasks = () => {
             <TableBody>
               {tasks.map((task) => (
                 <TableRow key={task.orderId}>
-                  <TableCell sx={tableCellStyle}>{task.orderId}</TableCell>
+                  <TableCell sx={tableCellStyle} onClick={() => handleTaskClick(task.orderId)}>
+                    {task.orderId}
+                  </TableCell>
                   <TableCell sx={tableCellStyle}>{task.status}</TableCell>
                   <TableCell sx={tableCellStyle}>
                     <Button variant="contained" color="secondary" onClick={() => handleDelete(task.orderId)}>
@@ -222,123 +238,146 @@ const Tasks = () => {
 
       <Modal open={modalOpen} onClose={handleCloseModal}>
         <Box sx={modalStyle}>
-          <Typography variant="h6" component="h2">
-            {taskType === 'SolderingSandblasting' && 'Perform Soldering and Sandblasting'}
-            {taskType === 'Painting' && 'Perform Painting'}
-            {taskType === 'Packaging' && 'Perform Packaging'}
-          </Typography>
-
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Order ID"
-            name="orderId"
-            value={taskData.orderId}
-            onChange={handleInputChange}
-            sx={textFieldStyle}
-          />
-
-          {taskType === 'SolderingSandblasting' && (
+          {taskType === 'OrderDetails' ? (
             <>
+              <Typography variant="h6" component="h2" style={{ color: 'black' }}>
+                Order Details
+              </Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Order ID:</strong> {taskData.orderId}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Year:</strong> {taskData.year}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Make:</strong> {taskData.make}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Model:</strong> {taskData.model}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Damage Type:</strong> {taskData.damageType}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Notes:</strong> {taskData.notes}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Image Path:</strong> {taskData.imagePath}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Created At:</strong> {taskData.createdAt}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Updated At:</strong> {taskData.updatedAt}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Deleted At:</strong> {taskData.deletedAt}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Created By:</strong> {taskData.createdBy}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Updated By:</strong> {taskData.updatedBy}</Typography>
+              <Typography variant="body1" style={{ color: 'black' }}><strong>Deleted By:</strong> {taskData.deletedBy}</Typography>
+            </>
+          ) : (
+            <>
+              <Typography variant="h6" component="h2">
+                {taskType === 'SolderingSandblasting' && 'Perform Soldering and Sandblasting'}
+                {taskType === 'Painting' && 'Perform Painting'}
+                {taskType === 'Packaging' && 'Perform Packaging'}
+              </Typography>
+
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                label="Level"
-                name="level"
-                value={taskData.level}
+                label="Order ID"
+                name="orderId"
+                value={taskData.orderId}
                 onChange={handleInputChange}
                 sx={textFieldStyle}
               />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Note"
-                name="note"
-                value={taskData.note}
-                onChange={handleInputChange}
-                sx={textFieldStyle}
-              />
+
+              {taskType === 'SolderingSandblasting' && (
+                <>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Level"
+                    name="level"
+                    value={taskData.level}
+                    onChange={handleInputChange}
+                    sx={textFieldStyle}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Note"
+                    name="note"
+                    value={taskData.note}
+                    onChange={handleInputChange}
+                    sx={textFieldStyle}
+                  />
+                </>
+              )}
+
+              {taskType === 'Painting' && (
+                <>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Color"
+                    name="color"
+                    value={taskData.color}
+                    onChange={handleInputChange}
+                    sx={textFieldStyle}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Type"
+                    name="type"
+                    value={taskData.type}
+                    onChange={handleInputChange}
+                    sx={textFieldStyle}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Note"
+                    name="note"
+                    value={taskData.note}
+                    onChange={handleInputChange}
+                    sx={textFieldStyle}
+                  />
+                </>
+              )}
+
+              {taskType === 'Packaging' && (
+                <>
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Inspection Rating"
+                    name="inspectionRating"
+                    value={taskData.inspectionRating}
+                    onChange={handleInputChange}
+                    sx={textFieldStyle}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Note"
+                    name="note"
+                    value={taskData.note}
+                    onChange={handleInputChange}
+                    sx={textFieldStyle}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Image Path"
+                    name="imagePath"
+                    value={taskData.imagePath}
+                    onChange={handleInputChange}
+                    sx={textFieldStyle}
+                  />
+                </>
+              )}
+
+              <Button variant="contained" color="primary" onClick={handleSubmit}>
+                {taskType === 'SolderingSandblasting' && 'Perform Soldering and Sandblasting'}
+                {taskType === 'Painting' && 'Perform Painting'}
+                {taskType === 'Packaging' && 'Perform Packaging'}
+              </Button>
             </>
           )}
-
-          {taskType === 'Painting' && (
-            <>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Color"
-                name="color"
-                value={taskData.color}
-                onChange={handleInputChange}
-                sx={textFieldStyle}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Type"
-                name="type"
-                value={taskData.type}
-                onChange={handleInputChange}
-                sx={textFieldStyle}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Note"
-                name="note"
-                value={taskData.note}
-                onChange={handleInputChange}
-                sx={textFieldStyle}
-              />
-            </>
-          )}
-
-          {taskType === 'Packaging' && (
-            <>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Inspection Rating"
-                name="inspectionRating"
-                value={taskData.inspectionRating}
-                onChange={handleInputChange}
-                sx={textFieldStyle}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Note"
-                name="note"
-                value={taskData.note}
-                onChange={handleInputChange}
-                sx={textFieldStyle}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Image Path"
-                name="imagePath"
-                value={taskData.imagePath}
-                onChange={handleInputChange}
-                sx={textFieldStyle}
-              />
-            </>
-          )}
-
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
-            {taskType === 'SolderingSandblasting' && 'Perform Soldering and Sandblasting'}
-            {taskType === 'Painting' && 'Perform Painting'}
-            {taskType === 'Packaging' && 'Perform Packaging'}
-          </Button>
         </Box>
       </Modal>
 
