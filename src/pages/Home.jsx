@@ -6,29 +6,43 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import backgroundImage from '../assets/background3.jpg';
+import backgroundImage from '../assets/background1.jpg';
 
+// Styling for the hero content with the text and background image
 const HeroContent = styled(Box)(({ theme }) => ({
   backgroundImage: `url(${backgroundImage})`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   color: theme.palette.common.white,
-  padding: theme.spacing(12, 0),
   textAlign: 'center',
   width: '100%',
-  minHeight: '60vh',
+  minHeight: '60vh', 
   display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
+  flexDirection: 'column',  // Text above the image
+  justifyContent: 'flex-start', // Align to the top
   alignItems: 'center',
-  marginBottom: theme.spacing(4),
+  padding: theme.spacing(2, 0, 0, 0),  // Top padding for space
+  position: 'relative',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dark overlay
+    zIndex: 1,
+  },
+  '& > *': { // Ensure text is above overlay
+    zIndex: 3,
+  },
 }));
 
 const Card = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   textAlign: 'center',
-  backgroundColor: '#101012', // semi-transparent white
-  color: theme.palette.text.primary, // Ensure text color is appropriate
+  backgroundColor: '#ffffff', // semi-transparent white
+  color: '#000000', // Ensure text color is dark
   boxShadow: theme.shadows[5],
   transition: 'transform 0.3s, box-shadow 0.3s',
   '&:hover': {
@@ -40,9 +54,9 @@ const Card = styled(Paper)(({ theme }) => ({
 const Home = () => {
   return (
     <Box sx={{ width: '100%', pt: '64px' }}>
-      <HeroContent >
+      <HeroContent>
         <Container maxWidth="sm">
-          <Typography variant="h1" gutterBottom>
+          <Typography variant="h1" gutterBottom style={{ color: 'red' }}>
             Welcome to Wheel Factory
           </Typography>
           <Typography variant="h5">
