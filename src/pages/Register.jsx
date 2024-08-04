@@ -1,5 +1,6 @@
 // src/pages/Register.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -32,6 +33,8 @@ const Register = () => {
     role: '',
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -45,6 +48,8 @@ const Register = () => {
         role: formData.role,
       });
       console.log(response.data);
+      alert('Registration successful');
+      navigate('/login'); // Redirect to login page after successful registration
     } catch (error) {
       console.error(error);
     }
